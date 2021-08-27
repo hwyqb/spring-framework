@@ -693,7 +693,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+		// 初始化bean工厂
 		refreshBeanFactory();
+		// 获取bean工厂
 		return getBeanFactory();
 	}
 
@@ -1473,6 +1475,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * closed already
 	 * @see #refreshBeanFactory()
 	 * @see #closeBeanFactory()
+	 *
+	 * 调用的是{@link AbstractRefreshableApplicationContext#getBeanFactory()}
 	 */
 	@Override
 	public abstract ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;

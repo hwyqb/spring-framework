@@ -17,6 +17,7 @@
 package org.springframework.beans.factory.support;
 
 import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.Nullable;
@@ -87,6 +88,10 @@ public interface BeanDefinitionReader {
 	 * @param resource the resource descriptor
 	 * @return the number of bean definitions found
 	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
+	 */
+	/**
+	 * 实际调用的是xml BeanDefinitionReader中的方法
+	 * @see XmlBeanDefinitionReader#loadBeanDefinitions(org.springframework.core.io.Resource)
 	 */
 	int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException;
 

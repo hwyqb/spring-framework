@@ -119,15 +119,23 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
+		// 判断 当前上下文中是否已经有bean工厂了
 		if (hasBeanFactory()) {
+			//如果有,销毁
 			destroyBeans();
+			//如果有,关闭
 			closeBeanFactory();
 		}
 		try {
+			//实例化 DefaultListableBeanFactory()这是beanFactory的实现类
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+			// 设置序列化id
 			beanFactory.setSerializationId(getId());
+			// 自定义bean工厂的属性
 			customizeBeanFactory(beanFactory);
+			//[重要]加载并注册BeanDefinitions,读取xml文件解析并注册BeanDefinitions
 			loadBeanDefinitions(beanFactory);
+			// 赋值
 			this.beanFactory = beanFactory;
 		}
 		catch (IOException ex) {
@@ -212,9 +220,11 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see DefaultListableBeanFactory#setAllowEagerClassLoading
 	 */
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
+		//是否允许bean覆盖
 		if (this.allowBeanDefinitionOverriding != null) {
 			beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
 		}
+		//是否允许循环引用
 		if (this.allowCircularReferences != null) {
 			beanFactory.setAllowCircularReferences(this.allowCircularReferences);
 		}
@@ -228,6 +238,9 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @throws IOException if loading of bean definition files failed
 	 * @see org.springframework.beans.factory.support.PropertiesBeanDefinitionReader
 	 * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
+	 */
+	/**
+	 * 实际调用的是xml加载解析beanDefinition {@link AbstractXmlApplicationContext#loadBeanDefinitions(DefaultListableBeanFactory beanFactory)}
 	 */
 	protected abstract void loadBeanDefinitions(DefaultListableBeanFactory beanFactory)
 			throws BeansException, IOException;

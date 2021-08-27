@@ -43,6 +43,9 @@ public interface BeanDefinitionDocumentReader {
 	 * @param readerContext the current context of the reader
 	 * (includes the target registry and the resource being parsed)
 	 * @throws BeanDefinitionStoreException in case of parsing errors
+	 *
+	 *
+	 * 实际调用的是{@link DefaultBeanDefinitionDocumentReader#registerBeanDefinitions(org.w3c.dom.Document, org.springframework.beans.factory.xml.XmlReaderContext)}
 	 */
 	void registerBeanDefinitions(Document doc, XmlReaderContext readerContext)
 			throws BeanDefinitionStoreException;

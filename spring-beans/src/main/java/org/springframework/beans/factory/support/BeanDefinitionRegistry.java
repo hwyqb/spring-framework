@@ -58,6 +58,9 @@ public interface BeanDefinitionRegistry extends AliasRegistry {
 	 * @see GenericBeanDefinition
 	 * @see RootBeanDefinition
 	 * @see ChildBeanDefinition
+	 *
+	 * 实际调用的是bean工厂实现类的registerBeanDefinition 注册beanDefinition方法
+	 * @see DefaultListableBeanFactory#registerBeanDefinition(java.lang.String, org.springframework.beans.factory.config.BeanDefinition)
 	 */
 	void registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
 			throws BeanDefinitionStoreException;
