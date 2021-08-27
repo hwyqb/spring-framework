@@ -136,9 +136,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	protected void addSingleton(String beanName, Object singletonObject) {
 		synchronized (this.singletonObjects) {
+			//加入一级缓存
 			this.singletonObjects.put(beanName, singletonObject);
+			//删除三级缓存
 			this.singletonFactories.remove(beanName);
+			//删除二级缓存
 			this.earlySingletonObjects.remove(beanName);
+			//标记为已注册
 			this.registeredSingletons.add(beanName);
 		}
 	}
@@ -248,7 +252,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
-					// 调用了传入的lumbda表达式,里面调用了createBean方法
+					// 调用了传入的lumbda表达式,里面调用了createBean方法,最终返回单例bean的引用
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				}
@@ -275,6 +279,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
+					// 把新建的单例bean放入一级缓存单例池
 					addSingleton(beanName, singletonObject);
 				}
 			}
