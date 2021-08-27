@@ -155,8 +155,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
 			if (!this.singletonObjects.containsKey(beanName)) {
+				//注册到三级缓存中
 				this.singletonFactories.put(beanName, singletonFactory);
+				//删除二级缓存
 				this.earlySingletonObjects.remove(beanName);
+				//添加到已注册单例池中,表示已经注册了
 				this.registeredSingletons.add(beanName);
 			}
 		}
@@ -179,8 +182,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 		// Quick check for existing instance without full singleton lock
+		//从一级缓存单例池中获取
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			// 从二级缓存中获取
 			singletonObject = this.earlySingletonObjects.get(beanName);
 			if (singletonObject == null && allowEarlyReference) {
 				synchronized (this.singletonObjects) {
@@ -189,10 +194,18 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (singletonObject == null) {
 						singletonObject = this.earlySingletonObjects.get(beanName);
 						if (singletonObject == null) {
+							//从三级缓存中获取
 							ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 							if (singletonFactory != null) {
+								//使用单例工厂创建代理对象
+								/**
+								 * 这里调用的其实就是当初传入的lumbda表达式
+								 * @see AbstractAutowireCapableBeanFactory#getEarlyBeanReference(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object)
+								 */
 								singletonObject = singletonFactory.getObject();
+								//如果三级缓存中获取到了,就加入二级缓存
 								this.earlySingletonObjects.put(beanName, singletonObject);
+								// 删除三级缓存
 								this.singletonFactories.remove(beanName);
 							}
 						}
@@ -200,6 +213,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				}
 			}
 		}
+		//对象的引用
 		return singletonObject;
 	}
 

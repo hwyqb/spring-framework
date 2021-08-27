@@ -583,6 +583,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Eagerly cache singletons to be able to resolve circular references
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.
+		// bean执行完构造后,判断是否需要提前暴露
 		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
 				isSingletonCurrentlyInCreation(beanName));
 		if (earlySingletonExposure) {
@@ -590,6 +591,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
+			// 暴露给三级缓存,这里传入的一个lambda表达式
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
@@ -963,6 +965,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @param mbd the merged bean definition for the bean
 	 * @param bean the raw bean instance
 	 * @return the object to expose as bean reference
+	 *
+	 *
+	 * 根据三级缓存中的工厂,创建代理对象,实例化bean
 	 */
 	protected Object getEarlyBeanReference(String beanName, RootBeanDefinition mbd, Object bean) {
 		Object exposedObject = bean;
@@ -1448,6 +1453,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		if (pvs != null) {
+			//处理属性依赖(这里处理了循环依赖)
 			applyPropertyValues(beanName, mbd, bw, pvs);
 		}
 	}
@@ -1694,7 +1700,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				deepCopy.add(pv);
 			}
 			else {
+				//这里是 依赖的属性名
 				String propertyName = pv.getName();
+				//这里是 依赖的属性值标记
 				Object originalValue = pv.getValue();
 				if (originalValue == AutowiredPropertyMarker.INSTANCE) {
 					Method writeMethod = bw.getPropertyDescriptor(propertyName).getWriteMethod();
@@ -1703,6 +1711,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					}
 					originalValue = new DependencyDescriptor(new MethodParameter(writeMethod, 0), true);
 				}
+				//获取到依赖的引用值
 				Object resolvedValue = valueResolver.resolveValueIfNecessary(pv, originalValue);
 				Object convertedValue = resolvedValue;
 				boolean convertible = bw.isWritableProperty(propertyName) &&

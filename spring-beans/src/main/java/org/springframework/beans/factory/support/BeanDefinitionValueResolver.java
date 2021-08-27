@@ -110,6 +110,7 @@ class BeanDefinitionValueResolver {
 		// to another bean to be resolved.
 		if (value instanceof RuntimeBeanReference) {
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
+			// 获取依赖引用并返回(这里进入)
 			return resolveReference(argName, ref);
 		}
 		else if (value instanceof RuntimeBeanNameReference) {
@@ -327,6 +328,7 @@ class BeanDefinitionValueResolver {
 				}
 				else {
 					resolvedName = String.valueOf(doEvaluate(ref.getBeanName()));
+					// 循环依赖,这里还是执行getBean
 					bean = this.beanFactory.getBean(resolvedName);
 				}
 				this.beanFactory.registerDependentBean(resolvedName, this.beanName);

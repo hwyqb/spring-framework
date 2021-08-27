@@ -248,7 +248,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
-		// 从缓存中获取这个beanName(这个是一级缓存)
+		// 从缓存中获取这个beanName(这里会遍历三级缓存取拿)
+		/** 假如有A依赖B,B依赖A
+		 * 1 第一次加载A进入这个方法,会发现没有任何缓存,返回空,接下来A实例化,会加入三级缓存提前曝光
+		 * 2 加载A的属性时,发现A依赖B,那么调用B的doGetBean,B实例化后也会三级缓存提前曝光,然后发现B依赖A,这是调用A的doGetBean
+		 * 3 这时该方法会从三级缓存中取出A工厂,创建A的代理对象,放入二级缓存,并删除三级缓存中的A
+		 * 4 此时B依赖A时,就获取到了A的代理对象引用了,此时B创建完毕
+		 * 5 B创建完毕后,B会把从三级二级缓存中删除,放入一级缓存中,此时A调用doGetBean方法返回B的引用
+		 * 6 那么A也能完成依赖注入了,也会把自己从二级三级缓存中删除,加入以及缓存.
+		 */
 		Object sharedInstance = getSingleton(beanName);
 		// 如果已经存在就返回
 		if (sharedInstance != null && args == null) {
