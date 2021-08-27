@@ -21,6 +21,7 @@ import java.util.Iterator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.lang.Nullable;
 
 /**
@@ -156,6 +157,9 @@ public interface ConfigurableListableBeanFactory
 	 * Note: This may have left the factory with some beans already initialized!
 	 * Call {@link #destroySingletons()} for full cleanup in this case.
 	 * @see #destroySingletons()
+	 *
+	 * [重要] 实例化所有非懒加载的单例bean,调用的是BeanFactory实现类的方法
+	 * @see DefaultListableBeanFactory#preInstantiateSingletons()
 	 */
 	void preInstantiateSingletons() throws BeansException;
 

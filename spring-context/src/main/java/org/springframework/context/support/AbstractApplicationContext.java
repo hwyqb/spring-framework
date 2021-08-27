@@ -589,6 +589,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Instantiate all remaining (non-lazy-init) singletons.
 				/**
+				 * [关键步骤]完成bean工厂的初始化
 				 * 初始化所有剩下的非懒加载的单例bean
 				 * 1 初始化创建非懒加载方式的单例Bean实例（未设置属性）
 				 * 2 填充属性
@@ -910,6 +911,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
+		// 查看bean工厂中是否包含转换服务的bean
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
 				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
 			beanFactory.setConversionService(
@@ -936,6 +938,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
+		// [重要] 实例化所有非懒加载的单例bean
 		beanFactory.preInstantiateSingletons();
 	}
 
