@@ -159,7 +159,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
 			if (!this.singletonObjects.containsKey(beanName)) {
-				//注册到三级缓存中
+				//注册到三级缓存中,传入的其实是一个回调
 				this.singletonFactories.put(beanName, singletonFactory);
 				//删除二级缓存
 				this.earlySingletonObjects.remove(beanName);
