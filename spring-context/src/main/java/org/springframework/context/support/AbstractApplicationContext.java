@@ -592,9 +592,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				 * [关键步骤]完成bean工厂的初始化
 				 * 初始化所有剩下的非懒加载的单例bean
 				 * 1 初始化创建非懒加载方式的单例Bean实例（未设置属性）
-				 * 2 填充属性
-				 * 3 初始化方法调用（比如调用afterPropertiesSet方法、init-method方法）
-				 * 4 调用BeanPostProcessor（后置处理器）对实例bean进行后置处理
+				 * 2 填充属性(这里会有循环依赖的问题了)
+				 * 3 bean初始化方法调用（比如注入aware,调用PropertiesSet方法、init-method方法）
+				 * 			3.1 如果有aware接口注入aware
+				 * 			3.2 调用BeanPostProcessor 后置处理器的before方法
+				 * 		    3.3 调用InitializingBean#afterPropertiesSet执行init-method
+				 * 		    3.4 调用BeanPostProcessor（后置处理器）after方法
 				 */
 				finishBeanFactoryInitialization(beanFactory);
 

@@ -557,7 +557,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
-			// 创建bean实例,使用反射调用构造方法,此时还没设置属性==此时完成了bean生命周期中的第一步实例化
+			// 创建bean实例,使用反射调用构造方法,此时还没设置属性
+			// 此时完成了bean生命周期中的第一步 实例化
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
 		Object bean = instanceWrapper.getWrappedInstance();
@@ -598,7 +599,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// bean属性填充和装配,比如autowire等
 			populateBean(beanName, mbd, instanceWrapper);
-			//
+			// 初始化bean
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
