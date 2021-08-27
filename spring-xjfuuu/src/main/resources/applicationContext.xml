@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="
+	    http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+">
+
+
+	<bean id="myBeanFactoryPostProcessor" class="com.xjfuuu.MyBeanFactoryPostProcessor"/>
+	<bean id="myBeanPostProcessor" class="com.xjfuuu.MyBeanPostProcessor"/>
+
+
+	<bean id="myBean" class="com.xjfuuu.MyBean"></bean>
+
+	<!--循环依赖问题-->
+	<!--	<bean id="myBean" class="com.xjfuuu.MyBean">-->
+	<!--		<property name="ItBean" ref="itBean"/>-->
+	<!--	</bean>-->
+	<!--	<bean id="itBean" class="com.xjfuuu.ItBean">-->
+	<!--		<property name="MyBean" ref="myBean"/>-->
+	<!--	</bean>-->
+
+
+	<!--aop配置-->
+	<!--横切逻辑-->
+	<!--<bean id="logUtils" class="LogUtils">
+	</bean>
+
+	<aop:config>
+		<aop:aspect ref="logUtils">
+			<aop:before method="beforeMethod" pointcut="execution(public void MyBean.print())"/>
+		</aop:aspect>
+	</aop:config>-->
+
+
+</beans>
