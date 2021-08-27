@@ -597,7 +597,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 初始化bean实例
 		Object exposedObject = bean;
 		try {
-			// bean属性填充和装配,比如autowire等
+			// bean属性填充和装配,比如autowire等(这里就是循环依赖了)
 			populateBean(beanName, mbd, instanceWrapper);
 			// 初始化bean
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
@@ -1798,7 +1798,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
-			// 触发bean初始化方法,InitializingBean#afterPropertiesSet方法
+			// 1 触发bean初始化方法,InitializingBean#afterPropertiesSet方法
+			// 2 如果bean设置了init-method标签,那么触发init方法
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {
@@ -1863,6 +1864,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				}
 			}
 			else {
+				// bean初始化器的afterPropertiesSet方法
 				((InitializingBean) bean).afterPropertiesSet();
 			}
 		}
@@ -1872,6 +1874,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (StringUtils.hasLength(initMethodName) &&
 					!(isInitializingBean && "afterPropertiesSet".equals(initMethodName)) &&
 					!mbd.isExternallyManagedInitMethod(initMethodName)) {
+				// 自定义的 init-method方法
 				invokeCustomInitMethod(beanName, bean, mbd);
 			}
 		}
