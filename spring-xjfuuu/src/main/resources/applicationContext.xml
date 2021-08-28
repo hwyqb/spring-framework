@@ -13,7 +13,7 @@
 	<!--注册bean工厂后置处理器-->
 	<bean id="iocTestBeanFactoryPostProcessor" class="com.xjfuuu.IocTestBeanFactoryPostProcessor"/>
 	<!--注册bean后置处理器-->
-	<bean id="iocTestMyBeanPostProcessor" class="com.xjfuuu.IocTestMyBeanPostProcessor"/>
+	<bean id="iocTestBeanPostProcessor" class="com.xjfuuu.IocTestBeanPostProcessor"/>
 
 	<!--注册iocTestBean-->
 <!--	<bean id="iocTestBean" class="com.xjfuuu.IocTestBean"></bean>-->
