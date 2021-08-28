@@ -427,6 +427,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		Object result = existingBean;
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
+			// 执行bean后置处理器的after方法
+			/**
+			 * aop切面织入增强,看这个类AbstractAutoProxyCreator,这个抽象类实现了BeanPostProcessors接口
+			 * @see org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+			 */
 			Object current = processor.postProcessAfterInitialization(result, beanName);
 			if (current == null) {
 				return result;
@@ -602,7 +607,17 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// bean属性填充和装配,比如autowire等(这里就是循环依赖了)
 			populateBean(beanName, mbd, instanceWrapper);
-			// 初始化bean
+			/**
+			 * 初始化bean
+			 * 1 注入Aware
+			 * 2 bean后置处理器的Before
+			 * 3 bean初始化方法,InitializingBean#afterPropertiesSet方法
+			 * 4 设置了init-method标签,那么触发init方法
+			 * 5 bean后置处理器的after
+			 *
+			 * 其中第5步，bean后置处理器的after中有Aop对切面织入增强的逻辑（生成代理对象）
+			 * @see AbstractAutowireCapableBeanFactory#applyBeanPostProcessorsAfterInitialization(java.lang.Object, java.lang.String)
+			 */
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
