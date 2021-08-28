@@ -296,6 +296,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
+				// 判断bean是否需要被代理,如果需要就创建并返回代理对象
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
@@ -344,9 +345,11 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		// Create proxy if we have advice.
+		// 获取与当前bean匹配的切面
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
+			// 创建代理对象
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			this.proxyTypes.put(cacheKey, proxy.getClass());
@@ -446,6 +449,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
 
+		//创建代理工厂
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.copyFrom(this);
 
@@ -458,9 +462,13 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			}
 		}
 
+		// 把所有的增强和拦截器都转换成Advisor
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
+		// 把转换后的拦截传递给工厂
 		proxyFactory.addAdvisors(advisors);
+		// 设置目标对象
 		proxyFactory.setTargetSource(targetSource);
+		// 自定义工厂属性,空实现
 		customizeProxyFactory(proxyFactory);
 
 		proxyFactory.setFrozen(this.freezeProxy);
@@ -468,6 +476,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			proxyFactory.setPreFiltered(true);
 		}
 
+		// 准备工作已完成,此时创建代理对象
 		return proxyFactory.getProxy(getProxyClassLoader());
 	}
 
