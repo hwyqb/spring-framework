@@ -6,22 +6,24 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * InitializingBean 初始化bean,初始化方法
- * ApplicationContextAware
+ * InitializingBean 初始化bean,afterPropertiesSet方法
+ * ApplicationContextAware,注入ApplicationContext
  */
-public class MyBean implements InitializingBean, ApplicationContextAware {
+public class IocTestBean implements InitializingBean, ApplicationContextAware {
 
-	private ItBean itBean;
+	//循环依赖
+	private IocDependBean iocDependBean;
 
-	public void setItBean(ItBean itBean) {
-		this.itBean = itBean;
+	//循环依赖注入
+	public void setIocDependBean(IocDependBean iocDependBean) {
+		this.iocDependBean = iocDependBean;
 	}
 
 	/**
 	 * 构造函数
 	 */
-	public MyBean(){
-		System.out.println("MyBean 构造器...");
+	public IocTestBean(){
+		System.out.println("IocTestBean 构造器...");
 	}
 
 
@@ -30,11 +32,7 @@ public class MyBean implements InitializingBean, ApplicationContextAware {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		System.out.println("MyBean afterPropertiesSet...");
-	}
-
-	public void print() {
-		System.out.println("print方法业务逻辑执行");
+		System.out.println("IocTestBean 初始化器接口方法InitializingBean#afterPropertiesSet...");
 	}
 
 	@Override

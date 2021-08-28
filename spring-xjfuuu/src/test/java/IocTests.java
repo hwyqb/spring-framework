@@ -1,4 +1,5 @@
-import com.xjfuuu.MyBean;
+import com.xjfuuu.AopTestBean;
+import com.xjfuuu.IocTestBean;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -6,7 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class IocTests {
 
 	/**
-	 *  Ioc 容器源码分析基础案例
+	 *  Ioc测试案例
 	 */
 	@Test
 	public void testIoC() {
@@ -24,20 +25,18 @@ public class IocTests {
 		 * Bean后置处理器初始化：AbstractApplicationContext#refresh#registerBeanPostProcessors
 		 */
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
-
-		MyBean myBean = applicationContext.getBean(MyBean.class);
-		System.out.println(myBean);
+		IocTestBean iocTestBean = applicationContext.getBean(IocTestBean.class);
+		System.out.println(iocTestBean);
 	}
 
 
-
 	/**
-	 *  Ioc 容器源码分析基础案例
+	 *  AOP测试案例
 	 */
 	@Test
 	public void testAOP() {
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
-		MyBean myBean = applicationContext.getBean(MyBean.class);
-		myBean.print();
+		AopTestBean aopTestBean = applicationContext.getBean(AopTestBean.class);
+		aopTestBean.print();
 	}
 }

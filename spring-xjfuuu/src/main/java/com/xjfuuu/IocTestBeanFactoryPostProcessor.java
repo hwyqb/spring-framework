@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 /**
  * bean工厂的后置处理器
  */
-public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
+public class IocTestBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
-	public MyBeanFactoryPostProcessor() {
+	public IocTestBeanFactoryPostProcessor() {
 		System.out.println("BeanFactoryPostProcessor的实现类构造函数...");
 	}
 

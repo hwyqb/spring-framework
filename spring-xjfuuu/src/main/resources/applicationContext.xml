@@ -10,31 +10,33 @@
 ">
 
 
-	<bean id="myBeanFactoryPostProcessor" class="com.xjfuuu.MyBeanFactoryPostProcessor"/>
-	<bean id="myBeanPostProcessor" class="com.xjfuuu.MyBeanPostProcessor"/>
+	<!--注册bean工厂后置处理器-->
+	<bean id="iocTestBeanFactoryPostProcessor" class="com.xjfuuu.IocTestBeanFactoryPostProcessor"/>
+	<!--注册bean后置处理器-->
+	<bean id="iocTestMyBeanPostProcessor" class="com.xjfuuu.IocTestMyBeanPostProcessor"/>
 
-
-	<bean id="myBean" class="com.xjfuuu.MyBean"></bean>
+	<!--注册iocTestBean-->
+<!--	<bean id="iocTestBean" class="com.xjfuuu.IocTestBean"></bean>-->
 
 	<!--循环依赖问题-->
-	<!--	<bean id="myBean" class="com.xjfuuu.MyBean">-->
-	<!--		<property name="ItBean" ref="itBean"/>-->
-	<!--	</bean>-->
-	<!--	<bean id="itBean" class="com.xjfuuu.ItBean">-->
-	<!--		<property name="MyBean" ref="myBean"/>-->
-	<!--	</bean>-->
+	<bean id="iocTestBean" class="com.xjfuuu.IocTestBean">
+		<property name="iocDependBean" ref="iocDependBean"/>
+	</bean>
+	<bean id="iocDependBean" class="com.xjfuuu.IocDependBean">
+		<property name="iocTestBean" ref="iocTestBean"/>
+	</bean>
 
 
 	<!--aop配置-->
 	<!--横切逻辑-->
-	<!--<bean id="logUtils" class="LogUtils">
-	</bean>
+	<bean id="aopTestLogUtils" class="com.xjfuuu.AopTestLogUtils"></bean>
+	<bean id="aopTestBean" class="com.xjfuuu.AopTestBean"></bean>
 
 	<aop:config>
-		<aop:aspect ref="logUtils">
-			<aop:before method="beforeMethod" pointcut="execution(public void MyBean.print())"/>
+		<aop:aspect ref="aopTestLogUtils">
+			<aop:before method="beforeMethod" pointcut="execution(public void com.xjfuuu.AopTestBean.print())"/>
 		</aop:aspect>
-	</aop:config>-->
+	</aop:config>
 
 
 </beans>

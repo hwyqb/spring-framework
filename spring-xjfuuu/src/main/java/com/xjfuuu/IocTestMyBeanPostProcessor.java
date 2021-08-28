@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 /**
  * bean对象的后置处理器
  */
-public class MyBeanPostProcessor implements BeanPostProcessor {
+public class IocTestMyBeanPostProcessor implements BeanPostProcessor {
 
-	public MyBeanPostProcessor() {
+	public IocTestMyBeanPostProcessor() {
 		System.out.println("BeanPostProcessor 实现类构造函数...");
 	}
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		if("myBean".equals(beanName)) {
+		if("iocTestBean".equals(beanName)) {
 			System.out.println("BeanPostProcessor 实现类 postProcessBeforeInitialization 方法被调用中......");
 		}
 		return bean;
@@ -23,7 +23,7 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if("myBean".equals(beanName)) {
+		if("iocTestBean".equals(beanName)) {
 			System.out.println("BeanPostProcessor 实现类 postProcessAfterInitialization 方法被调用中......");
 		}
 		return bean;
