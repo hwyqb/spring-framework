@@ -552,7 +552,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Invoke factory processors registered as beans in the context.
 				/**
 				 * 实例化实现了BeanFactoryPostProcessor接口的Bean，并调用接口方法
-				 * 前面已经有bean工厂了,这里就创建的工厂的后置处理器了
+				 * 前面已经有bean工厂了,这里就创建并执行的工厂的后置处理器了
 				 */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
@@ -768,6 +768,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+		// 执行bean工厂后置处理器
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime

@@ -179,6 +179,7 @@ final class PostProcessorRegistrationDelegate {
 		for (String postProcessorName : nonOrderedPostProcessorNames) {
 			nonOrderedPostProcessors.add(beanFactory.getBean(postProcessorName, BeanFactoryPostProcessor.class));
 		}
+		//执行bean工厂后置处理器
 		invokeBeanFactoryPostProcessors(nonOrderedPostProcessors, beanFactory);
 
 		// Clear cached merged bean definitions since the post-processors might have
@@ -288,6 +289,7 @@ final class PostProcessorRegistrationDelegate {
 			Collection<? extends BeanFactoryPostProcessor> postProcessors, ConfigurableListableBeanFactory beanFactory) {
 
 		for (BeanFactoryPostProcessor postProcessor : postProcessors) {
+			// 执行后置处理器
 			postProcessor.postProcessBeanFactory(beanFactory);
 		}
 	}
